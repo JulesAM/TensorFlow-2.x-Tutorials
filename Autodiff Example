@@ -1,0 +1,87 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled2.ipynb",
+      "provenance": [],
+      "collapsed_sections": [],
+      "authorship_tag": "ABX9TyPcmgugtYmb2d0imo3lOr04",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/JulesAM/TensorFlow-2.x-Tutorials/blob/master/Autodiff%20Example\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "n36H48Z4PkQt",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 221
+        },
+        "outputId": "58e42151-c89e-479d-c9cb-7070fe873a88"
+      },
+      "source": [
+        "# Tensorflow==2.0\n",
+        "try:\n",
+        "    %tensorflow_version 2.x\n",
+        "except Exception:\n",
+        "  pass\n",
+        "import tensorflow as tf\n",
+        "print(tf.__version__)\n",
+        "# init Rand Tensor of size(2,2) \n",
+        "x = tf.ones((2, 2))\n",
+        "#print (\"x:\", x)\n",
+        "with tf.GradientTape() as t: #load tape for the operations on objects\n",
+        "  t.watch(x)  # records tape object\n",
+        "  y = tf.reduce_sum(x) #sum along dimensions of tensor x and computes a scalar = 4\n",
+        "  print(\"\\ny:\", y)\n",
+        "  z = tf.multiply(y, y) # \n",
+        "  print(\"\\z:\", z)\n",
+        " \n",
+        "# Derivative of z with respect to the original input tensor x\n",
+        "dz_dx = t.gradient(z, x)\n",
+        "print(\"\\ndz_dz:\", dz_dx)\n",
+        "for i in [0, 1]:\n",
+        "  for j in [0, 1]:\n",
+        "    assert dz_dx[i][j].numpy() == 8.0"
+      ],
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "TensorFlow 2.x selected.\n",
+            "2.1.0\n",
+            "x: tf.Tensor(\n",
+            "[[1. 1.]\n",
+            " [1. 1.]], shape=(2, 2), dtype=float32)\n",
+            "\n",
+            "y: tf.Tensor(4.0, shape=(), dtype=float32)\n",
+            "\\z: tf.Tensor(16.0, shape=(), dtype=float32)\n",
+            "\n",
+            "dz_dz: tf.Tensor(\n",
+            "[[8. 8.]\n",
+            " [8. 8.]], shape=(2, 2), dtype=float32)\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    }
+  ]
+}
